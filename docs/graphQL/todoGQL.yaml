@@ -1,0 +1,96 @@
+type Mutation {
+  """
+  Add a new todo
+  
+  Equivalent to POST /todos
+  """
+  addTodo(
+    """Object representing a Todo"""
+    todoInput: TodoInput!
+  ): Todo
+
+  """
+  remove all todos
+  
+  Equivalent to DELETE /todos
+  """
+  deleteAllTodos: Todo
+
+  """
+  delete a single todo with the given `todoId`
+  
+  Equivalent to DELETE /todos/{todoId}
+  """
+  deleteTodoById(
+    """The unique ID of a todo"""
+    todoId: String!
+  ): Todo
+
+  """
+  Update an existing Todo
+  
+  Equivalent to PUT /todos/{todoId}
+  """
+  updateTodoById(
+    """The unique ID of a todo"""
+    todoId: String!
+
+    """Object representing a Todo"""
+    todoInput: TodoInput!
+  ): Todo
+}
+
+type Query {
+  """
+  Details of one Todo
+  
+  Equivalent to GET /todos/{todoId}
+  """
+  todo(
+    """The unique ID of a todo"""
+    todoId: String!
+  ): Todo
+
+  """
+  view all known Todos
+  
+  Equivalent to GET /todos
+  """
+  todoList: [Todo]
+}
+
+"""Object representing a Todo"""
+type Todo {
+  """whether the todo is completed or not"""
+  completed: Boolean
+
+  """id of the entity"""
+  id: String
+
+  """order in the priority list"""
+  order: Int
+
+  """title of the todo"""
+  title: String!
+
+  """url associated with the todo"""
+  url: String
+}
+
+"""Object representing a Todo"""
+input TodoInput {
+  """whether the todo is completed or not"""
+  completed: Boolean
+
+  """id of the entity"""
+  id: String
+
+  """order in the priority list"""
+  order: Int
+
+  """title of the todo"""
+  title: String!
+
+  """url associated with the todo"""
+  url: String
+}

@@ -1,0 +1,200 @@
+openapi: 3.0.1
+info:
+  description: 'Todos Backend API is a todo storage backend for [TodoMVC](//todomvc.com).'
+  version: 1.0.0
+  title: Todos API
+  termsOfService: 'https://github.com/Khan/web-workshop'
+  contact:
+    email: steve@khanacademy.org
+  license:
+    name: APL
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
+tags:
+  - name: todos
+    description: Manipluation of Todos
+externalDocs:
+  description: 'Example REST API using Go, oapi-codegen'
+  url: 'https://github.com/Khan/web-workshop'
+servers:
+  - url: 'http://localhost:8080'
+    description: My development server
+paths:
+  /todos:
+    delete:
+      tags:
+        - todos
+      summary: remove all todos
+      description: remove all todos
+      operationId: deleteAllTodos
+      responses:
+        '204':
+          description: successful operation
+    post:
+      tags:
+        - todos
+      summary: Add a new todo
+      description: Add a new todo
+      operationId: addTodo
+      requestBody:
+        $ref: '#/components/requestBodies/Todo'
+      responses:
+        '201':
+          $ref: '#/components/responses/TodoResponse'
+        '400':
+          $ref: '#/components/responses/IllegalInput'
+        default:
+          $ref: '#/components/responses/GeneralError'
+    get:
+      tags:
+        - todos
+      summary: view all known Todos
+      description: view all known Todos
+      operationId: getTodoList
+      responses:
+        '200':
+          $ref: '#/components/responses/TodoListResponse'
+        default:
+          $ref: '#/components/responses/GeneralError'
+  '/todos/{todoId}':
+    parameters:
+      - name: todoId
+        in: path
+        description: The unique ID of a todo
+        required: true
+        style: simple
+        schema:
+          type: string
+    get:
+      tags:
+        - todos
+      summary: Details of one Todo
+      description: Details of one Todo
+      operationId: getTodoById
+      responses:
+        '200':
+          $ref: '#/components/responses/TodoResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/GeneralError'
+    delete:
+      tags:
+        - todos
+      summary: delete a single todo
+      description: delete a single todo with the given `todoId`
+      operationId: deleteTodoById
+      responses:
+        '204':
+          $ref: '#/components/responses/TodoResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/GeneralError'
+    put:
+      tags:
+        - todos
+      summary: Update an existing Todo
+      description: Update an existing Todo
+      operationId: updateTodoById
+      requestBody:
+        $ref: '#/components/requestBodies/Todo'
+      responses:
+        '201':
+          $ref: '#/components/responses/TodoResponse'
+        '400':
+          $ref: '#/components/responses/IllegalInput'
+        default:
+          $ref: '#/components/responses/GeneralError'
+components:
+  schemas:
+    GeneralError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    Todo:
+      description: Object representing a Todo
+      type: object
+      required:
+        - title
+      properties:
+        id:
+          description: id of the entity
+          type: string
+          example: '42'
+        title:
+          description: title of the todo
+          type: string
+          example: My task
+        completed:
+          description: whether the todo is completed or not
+          type: boolean
+          example: false
+        url:
+          description: url associated with the todo
+          type: string
+        order:
+          format: int32
+          description: order in the priority list
+          type: integer
+    TodoList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Todo'
+      x-examples:
+        example-1:
+          - id: '42'
+            title: My Task
+            completed: false
+      description: A List of Todo Items
+  requestBodies:
+    Todo:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Todo'
+      description: Todo Object
+      required: true
+  responses:
+    NotFound:
+      description: Entity not found.
+    IllegalInput:
+      description: Illegal input for operation.
+    GeneralError:
+      description: General Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GeneralError'
+    TodoResponse:
+      description: The saved todo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Todo'
+          examples:
+            example-1:
+              $ref: '#/components/examples/todoExample'
+    TodoListResponse:
+      description: ResultSet with all the todos
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TodoList'
+          examples:
+            example-1:
+              $ref: '#/components/examples/todoListExample'
+  examples:
+    todoListExample:
+      value:
+        - id: '42'
+          title: My Task
+          completed: false
+    todoExample:
+      value:
+        id: '42'
+        title: My Task
+        completed: false
