@@ -90,17 +90,17 @@ func runServer(logger *log.Logger) error {
 
 // Todo is an task we wish to remember.
 type Todo struct {
-	ID        string `json:"id"`
+	ID        int32  `json:"id"`
 	Title     string `json:"title"`
 	Completed bool   `json:"completed"`
 	URL       string `json:"url"`
-	Order     int    `json:"order"`
+	Order     int32  `json:"order"`
 }
 
 // ListTodos is an HTTP Handler for returning a list of Products.
 func ListTodos(w http.ResponseWriter, r *http.Request) {
 	list := []Todo{
-		{ID: "42", Title: "MyTask", Completed: false, Order: 1},
+		{ID: 42, Title: "MyTask", Completed: false, Order: 1},
 	}
 
 	data, err := json.Marshal(list)

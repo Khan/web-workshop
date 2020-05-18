@@ -36,7 +36,7 @@ func TestTodos(t *testing.T) {
 					},
 				},
 			},
-			want: "[{\"id\":\"42\",\"title\":\"MyTask\",\"completed\":false,\"url\":\"\",\"order\":1}]",
+			want: "[{\"id\":42,\"title\":\"MyTask\",\"completed\":false,\"url\":\"\",\"order\":1}]",
 		},
 	}
 	for i := range tests {

@@ -14,7 +14,7 @@ type Mutation {
   
   Equivalent to DELETE /todos
   """
-  deleteAllTodos: Todo
+  deleteAllTodos: String
 
   """
   delete a single todo with the given `todoId`
@@ -23,7 +23,7 @@ type Mutation {
   """
   deleteTodoById(
     """The unique ID of a todo"""
-    todoId: String!
+    todoId: Int!
   ): Todo
 
   """
@@ -33,7 +33,7 @@ type Mutation {
   """
   updateTodoById(
     """The unique ID of a todo"""
-    todoId: String!
+    todoId: Int!
 
     """Object representing a Todo"""
     todoInput: TodoInput!
@@ -48,7 +48,7 @@ type Query {
   """
   todo(
     """The unique ID of a todo"""
-    todoId: String!
+    todoId: Int!
   ): Todo
 
   """
@@ -65,13 +65,13 @@ type Todo {
   completed: Boolean
 
   """id of the entity"""
-  id: String
+  id: Int
 
   """order in the priority list"""
   order: Int
 
   """title of the todo"""
-  title: String!
+  title: String
 
   """url associated with the todo"""
   url: String
@@ -83,13 +83,13 @@ input TodoInput {
   completed: Boolean
 
   """id of the entity"""
-  id: String
+  id: Int
 
   """order in the priority list"""
   order: Int
 
   """title of the todo"""
-  title: String!
+  title: String
 
   """url associated with the todo"""
   url: String

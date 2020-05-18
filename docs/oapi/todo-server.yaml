@@ -63,7 +63,8 @@ paths:
         required: true
         style: simple
         schema:
-          type: string
+          type: integer
+          format: int32
     get:
       tags:
         - todos
@@ -118,13 +119,17 @@ components:
     Todo:
       description: Object representing a Todo
       type: object
-      required:
-        - title
+      x-examples:
+        example-1:
+          id: '42'
+          title: dredd
+          completed: false
       properties:
         id:
           description: id of the entity
-          type: string
-          example: '42'
+          type: integer
+          format: int32
+          example: 42
         title:
           description: title of the todo
           type: string
@@ -137,16 +142,17 @@ components:
           description: url associated with the todo
           type: string
         order:
-          format: int32
           description: order in the priority list
           type: integer
+          format: int32
+          example: 10
     TodoList:
       type: array
       items:
         $ref: '#/components/schemas/Todo'
       x-examples:
         example-1:
-          - id: '42'
+          - id: 42
             title: My Task
             completed: false
       description: A List of Todo Items
@@ -179,7 +185,7 @@ components:
             example-1:
               $ref: '#/components/examples/todoExample'
     TodoListResponse:
-      description: ResultSet with all the todos
+      description: Resultset with all the todos
       content:
         application/json:
           schema:
@@ -190,11 +196,11 @@ components:
   examples:
     todoListExample:
       value:
-        - id: '42'
+        - id: 42
           title: My Task
           completed: false
     todoExample:
       value:
-        id: '42'
+        id: 42
         title: My Task
         completed: false
