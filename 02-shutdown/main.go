@@ -12,17 +12,12 @@ import (
 )
 
 func main() {
-	logger := log.New(os.Stdout,
-		"INFO: ",
-		log.Ldate|log.Ltime|log.Lshortfile)
-	err := runServer(logger)
-	if err == nil {
-		logger.Println("finished clean")
-		os.Exit(0)
-	} else {
+	logger := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
+	if err := runServer(logger); err != nil {
 		logger.Printf("Got error: %v", err)
 		os.Exit(1)
 	}
+	logger.Println("Finished clean")
 }
 
 func runServer(logger *log.Logger) error {
