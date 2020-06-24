@@ -18,11 +18,15 @@ Modified main.go
 ```
 ---
 # Workshop 1
-## Getting started by knowing when to quit!
+## Getting started by knowing when to quit! (Don't Panic!)
 In the course of development, it is important to have a rapid feedback cycle.
 When you are building a web application, you want to run it, check it out, and then _**stop**_ it.
 
-You need some way to signal to your program that it should exit. Go by default will kill your program as soon as it receives any quit signals from the operating system.
+You need some way to signal to your program that it should exit gracefully. Go by default will kill your program as soon as it receives any quit signals from the operating system.
+
+> By default, a synchronous signal is converted into a run-time panic. A SIGHUP, SIGINT, or SIGTERM signal causes the program to exit.
+
+You can read more about it on the [package documentation](https://golang.org/pkg/os/signal/#hdr-Default_behavior_of_signals_in_Go_programs)
 
 <details><summary>Example</summary>
 
@@ -55,7 +59,7 @@ When you `go run main.go` in the terminal, if you type "Control-C", your operati
 </details>
 
 This might be fine, but what if our program was in the middle of something important and we only want it to stop when it's safely done?
-We need to explicitly listen for that operating signal, and then Go will let our program pick when and how to exit.
+We need to explicitly listen for that operating signal, and then Go will let our program pick __when__ *and* __how__ to exit.
 
 <details><summary>Example</summary>
 
