@@ -13,25 +13,29 @@ import (
 
 func main() {
 	logger := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
-	if err := runServer(logger); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8000"
+	}
+	if err := runServer(logger, port); err != nil {
 		logger.Printf("Got error: %v", err)
 		os.Exit(1)
 	}
 	logger.Println("Finished clean")
 }
 
-func runServer(logger *log.Logger) error {
+func runServer(logger *log.Logger, port string) error {
 	// =========================================================================
 	// App Starting
 
-	logger.Printf("main : Started")
+	logger.Printf("main : Listening on :%v", port)
 	defer logger.Println("main : Completed")
 
 	// =========================================================================
 	// Start API Service
 
 	api := http.Server{
-		Addr:         "localhost:8000",
+		Addr:         ":" + port,
 		Handler:      http.HandlerFunc(Echo),
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,

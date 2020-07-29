@@ -65,7 +65,7 @@ func TestWaiter(t *testing.T) {
 		// Discard noisy logs
 		logger := log.New(ioutil.Discard, "", log.LstdFlags)
 		go func() {
-			runServer(logger)
+			runServer(logger, "0")
 			finished = true
 		}()
 

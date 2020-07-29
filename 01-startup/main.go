@@ -9,25 +9,29 @@ import (
 
 func main() {
 	logger := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
-	if err := runServer(logger); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8000"
+	}
+	if err := runServer(logger, port); err != nil {
 		logger.Printf("Got error: %v", err)
 		os.Exit(1)
 	}
 	logger.Println("Finished clean")
 }
 
-func runServer(logger *log.Logger) error {
+func runServer(logger *log.Logger, port string) error {
 	// =========================================================================
 	// App Starting
 
-	logger.Printf("main : Started")
+	logger.Printf("main : Listening on :%v", port)
 	defer logger.Println("main : Completed")
 
 	// Convert the Echo function to a type that implements http.Handler
 	h := http.HandlerFunc(Echo)
 
 	// Start a server listening on port 8000 and responding using Echo.
-	if err := http.ListenAndServe("localhost:8000", h); err != nil {
+	if err := http.ListenAndServe(":"+port, h); err != nil {
 		logger.Printf("error: listening and serving: %s", err)
 		return err
 	}
