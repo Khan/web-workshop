@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -15,37 +14,37 @@ import (
 )
 
 func TestTodos(t *testing.T) {
-	httpTestWriter := httptest.NewRecorder()
-	type args struct {
-		w http.ResponseWriter
-		r *http.Request
-	}
 	tests := []struct {
-		name string
-		args args
-		want string
+		name   string
+		r      *http.Request
+		method string
+		path   string
+		want   string
 	}{
 		{
-			name: "Get from /foo/bar",
-			args: args{
-				w: httpTestWriter,
-				r: &http.Request{
-					Method: "GET",
-					URL: &url.URL{
-						Path: "/foo/bar",
-					},
-				},
-			},
-			want: "[{\"id\":42,\"title\":\"MyTask\",\"completed\":false,\"url\":\"\",\"order\":1}]",
+			name:   "Get from /foo/bar",
+			method: "GET",
+			path:   "/foo/bar",
+			want:   `[{"id":42,"title":"MyTask","completed":false,"url":"","order":1}]`,
 		},
 	}
 	for i := range tests {
 		tt := tests[i]
 		t.Run(tt.name, func(t *testing.T) {
-			ListTodos(tt.args.w, tt.args.r)
-			actual, _ := ioutil.ReadAll(httpTestWriter.Body)
-			assertStatus(t, httpTestWriter.Code, http.StatusOK)
-			assertResponseBody(t, string(actual), tt.want)
+			r := &http.Request{
+				Method: tt.method,
+				URL: &url.URL{
+					Path: tt.path,
+				},
+			}
+			rr := httptest.NewRecorder()
+			ListTodos(rr, r)
+			if rr.Code != http.StatusOK {
+				t.Errorf("Echo did not get correct status, got %d, want %d", rr.Code, http.StatusOK)
+			}
+			if got := rr.Body.String(); got != tt.want {
+				t.Errorf("Echo response body is wrong, got %q want %q", got, tt.want)
+			}
 		})
 	}
 }
@@ -101,37 +100,11 @@ func TestHealthCheckHandler(t *testing.T) {
 
 	// Check the status code is what we expect.
 	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v",
-			status, http.StatusOK)
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 
 	want := "application/json; charset=utf-8"
 	if contentType := rr.Header().Get("Content-Type"); contentType != want {
-		t.Errorf("handler returned wrong status code: got %v want %v",
-			contentType, want)
-	}
-}
-
-func assertEqual(t *testing.T, a interface{}, b interface{}, message string) {
-	if a == b {
-		return
-	}
-	if message == "" {
-		message = fmt.Sprintf("%v != %v", a, b)
-	}
-	t.Fatal(message)
-}
-
-func assertStatus(t *testing.T, got, want int) {
-	t.Helper()
-	if got != want {
-		t.Errorf("did not get correct status, got %d, want %d", got, want)
-	}
-}
-
-func assertResponseBody(t *testing.T, got, want string) {
-	t.Helper()
-	if got != want {
-		t.Errorf("response body is wrong, got %q want %q", got, want)
+		t.Errorf("handler returned wrong status code: got %v want %v", contentType, want)
 	}
 }
